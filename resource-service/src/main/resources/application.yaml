@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ResourceService
+  http:
+    codecs:
+      # TODO check indepth memory settings for requests
+      max-in-memory-size: 10MB
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/resources
+    username: admin
+    password: admin123
