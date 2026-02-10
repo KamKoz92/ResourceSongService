@@ -4,6 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>song-service</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github</groupId>
+            <artifactId>resource-service</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+
     <parent>
         <groupId>com.github</groupId>
         <artifactId>ResourceSongService</artifactId>

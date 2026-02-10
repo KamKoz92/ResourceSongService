@@ -1,33 +1,37 @@
-package com.github.resource.controller;
+package com.github.song.controller;
 
-import com.github.resource.service.SongService;
+import com.github.song.repository.SongRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
+@Slf4j
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ResourceControllerIT {
+public class SongControllerIT {
 
-    @MockitoBean
-    SongService songService;
+    @Autowired
+    SongRepository repository;
 
     @Autowired
     WebTestClient client;
+
+    @BeforeEach
+    void cleanDb() {
+        repository.deleteAll().block();
+    }
 
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
@@ -41,7 +45,7 @@ public class ResourceControllerIT {
 
         // When & Then
         client.get()
-                .uri("/resources/12")
+                .uri("/songs/12")
                 .exchange()
                 .expectStatus().isNotFound();
 
@@ -53,7 +57,7 @@ public class ResourceControllerIT {
 
         // When & Then
         client.get()
-                .uri("/resources/12a")
+                .uri("/songs/12a")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -61,23 +65,26 @@ public class ResourceControllerIT {
     @Test
     void testCreatedOnSaveEndpoint() {
         // Given
-        when(songService.save(any())).thenAnswer(a -> Mono.just(a.getArguments()[0]));
-        byte[] mp3File = getSampleMP3();
-
+        String body = getFileContents();
+        System.out.println("Host: " + postgres.getHost());
+        System.out.println("Port: " + postgres.getFirstMappedPort());
+        System.out.println("Database: " + postgres.getDatabaseName());
+        System.out.println("Username: " + postgres.getUsername());
+        System.out.println("Password: " + postgres.getPassword());
         // When & Then
         client.post()
-                .uri("/resources")
-                .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")
-                .bodyValue(mp3File)
-                .exchange()
-                .expectStatus().isOk();
+                .uri("/songs")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .bodyValue(body)
+                .exchange();
+        log.info("");
     }
 
 
-    private byte[] getSampleMP3() {
-        try(var is = this.getClass().getResourceAsStream("/mp3_sample.mp3")) {
+    private String getFileContents() {
+        try(var is = this.getClass().getResourceAsStream("/sampleMetadata.json")) {
             assert is != null;
-            return is.readAllBytes();
+            return new String(is.readAllBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

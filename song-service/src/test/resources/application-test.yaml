@@ -1,9 +1,6 @@
 spring:
   application:
-    name: ResourceService
-  http:
-    codecs:
-      max-in-memory-size: 10MB
+    name: SongService
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/testDb
     username: test

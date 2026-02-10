@@ -2,6 +2,7 @@ package com.github.resource.service;
 
 import com.github.resource.model.ResourceEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SongService {
@@ -22,6 +24,7 @@ public class SongService {
     private final WebClient client;
 
     public Mono<ResourceEntity> save(ResourceEntity resourceEntity) {
+        log.info("Sending request to save mp3 metadata");
         Metadata metadata = extractMetadata(resourceEntity);
         return client.post()
                 .uri("/save")
@@ -32,6 +35,7 @@ public class SongService {
     }
 
     public Mono<Metadata> get(String id) {
+        log.info("Sending request to get mp3 metadata");
         return client.get()
                 .uri(uri -> uri.path("/{id}").queryParam("id", id).build())
                 .retrieve()
@@ -49,5 +53,13 @@ public class SongService {
             throw new RuntimeException(e);
         }
         return metadata;
+    }
+
+    public Mono<Void> delete(Long id) {
+        log.info("Sending request to delete mp3 metadata");
+        return client.delete()
+                .uri("uri")
+                .retrieve()
+                .bodyToMono(Void.class);
     }
 }
