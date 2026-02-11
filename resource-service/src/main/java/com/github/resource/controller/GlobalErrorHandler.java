@@ -1,12 +1,16 @@
 package com.github.resource.controller;
 
-import com.github.resource.exception.InvalidCSVException;
-import com.github.resource.exception.InvalidIdException;
+import com.github.common.exception.InvalidCSVException;
+import com.github.common.exception.InvalidIdException;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
+import com.github.common.model.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import reactor.core.publisher.Mono;
 
 @RestControllerAdvice
@@ -15,18 +19,41 @@ public class GlobalErrorHandler {
     @ExceptionHandler(exception = {
             InvalidIdException.class,
             InvalidCSVException.class,
-            InvalidMP3FormatException.class})
-    public Mono<ResponseEntity<String>> handleInvalidIdException(RuntimeException ex) {
-        return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
+            InvalidMP3FormatException.class,
+            ResponseStatusException.class})
+    public Mono<ResponseEntity<ErrorResponse>> handleInvalidIdException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode("400");
+        if (e instanceof UnsupportedMediaTypeStatusException ex) {
+            errorResponse.setErrorMessage(String.format("Invalid file format: %s. Only MP3 files are allowed", ex.getContentType()));
+            return Mono.just(ResponseEntity.badRequest().body(errorResponse));
+        }
+        if (e instanceof ResponseStatusException ex) {
+            errorResponse.setErrorMessage(ex.getReason());
+            return Mono.just(ResponseEntity.badRequest().body(errorResponse));
+        }
+        errorResponse.setErrorMessage(e.getMessage());
+        return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
 
+    // including errorCode and message in notFound response is redundant
     @ExceptionHandler(MP3FileNotFoundException.class)
-    public Mono<ResponseEntity<String>> handleMP3FileNotFoundException(MP3FileNotFoundException ex) {
-        return Mono.just(ResponseEntity.notFound().build());
+    public Mono<ResponseEntity<ErrorResponse>> handleMP3FileNotFoundException(MP3FileNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode("404");
+        errorResponse.setErrorMessage(e.getMessage());
+        return Mono.just(ResponseEntity.status(404).body(errorResponse));
     }
 
-    @ExceptionHandler(Exception.class)
-    public Mono<ResponseEntity<String>> handleGenericException(Exception ex) {
-        return Mono.just(ResponseEntity.internalServerError().body(ex.getMessage()));
+    @ExceptionHandler(exception = Exception.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode("500");
+        if (e instanceof HttpClientErrorException ex) {
+            errorResponse.setErrorMessage(ex.getMessage());
+            return Mono.just(ResponseEntity.badRequest().body(errorResponse));
+        }
+        errorResponse.setErrorMessage(e.getMessage());
+        return Mono.just(ResponseEntity.internalServerError().body(errorResponse));
     }
 }

@@ -1,7 +1,11 @@
 package com.github.song.controller;
 
-import com.github.resource.exception.InvalidIdException;
+import com.github.common.exception.InvalidCSVException;
+import com.github.common.exception.InvalidIdException;
+import com.github.common.model.ErrorResponse;
+import com.github.song.exception.MetadataAlreadyPresentException;
 import com.github.song.exception.MetadataNotFoundException;
+import com.github.common.exception.MetadataValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,21 +16,42 @@ import reactor.core.publisher.Mono;
 @RestControllerAdvice
 public class GlobalErrorHandler {
 
-    @ExceptionHandler(exception = InvalidIdException.class)
-    public Mono<ResponseEntity<String>> handleInvalidIdException(InvalidIdException ex) {
-        log.error("Invalid id exception", ex);
-        return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
+    @ExceptionHandler(exception = {
+            InvalidIdException.class,
+            InvalidCSVException.class,
+            MetadataValidationException.class})
+    public Mono<ResponseEntity<ErrorResponse>> handleInvalidIdException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode("400");
+        errorResponse.setErrorMessage(e.getMessage());
+        if (e instanceof MetadataValidationException ex) {
+            errorResponse.setDetails(ex.getValidationErrors());
+        }
+        return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
 
     @ExceptionHandler(MetadataNotFoundException.class)
-    public Mono<ResponseEntity<String>> handleMetadataNotFoundException(MetadataNotFoundException ex) {
-        log.error("Metadata not found", ex);
-        return Mono.just(ResponseEntity.notFound().build());
+    public Mono<ResponseEntity<ErrorResponse>> handleMetadataNotFoundException(MetadataNotFoundException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorMessage(e.getMessage());
+        errorResponse.setErrorCode("404");
+        return Mono.just(ResponseEntity.status(404).body(errorResponse));
+    }
+
+    @ExceptionHandler(MetadataAlreadyPresentException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleMetadataAlreadyPresentException(MetadataAlreadyPresentException e) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorMessage(e.getMessage());
+        errorResponse.setErrorCode("409");
+        return Mono.just(ResponseEntity.status(409).body(errorResponse));
     }
 
     @ExceptionHandler(Exception.class)
-    public Mono<ResponseEntity<String>> handleGenericException(Exception ex) {
-        log.error("Unknown exception", ex);
-        return Mono.just(ResponseEntity.internalServerError().body(ex.getMessage()));
+    public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
+        log.error("Unknown", e);
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode("500");
+        errorResponse.setErrorMessage(e.getMessage());
+        return Mono.just(ResponseEntity.internalServerError().body(errorResponse));
     }
 }

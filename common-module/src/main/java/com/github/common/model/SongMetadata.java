@@ -1,8 +1,9 @@
-package com.github.song.model;
+package com.github.common.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
 
 @Data
 @Table("songs")
@@ -14,5 +15,4 @@ public class SongMetadata {
     String album;
     String duration;
     String year;
-
 }

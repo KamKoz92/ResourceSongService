@@ -1,7 +1,9 @@
 package com.github.song.controller;
 
-import com.github.resource.model.IdResponse;
-import com.github.song.model.SongMetadata;
+
+import com.github.common.model.IdResponse;
+import com.github.common.model.IdsResponse;
+import com.github.common.model.SongMetadata;
 import com.github.song.service.SongService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -27,9 +30,9 @@ public class SongServiceController {
     private final SongService service;
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    Mono<ResponseEntity<IdResponse>> save(@RequestBody Mono<SongMetadata> metadata) {
+    Mono<ResponseEntity<IdResponse>> save(@RequestBody Mono<SongMetadata> metadataJson) {
         log.info("Received save mp3 metadata request");
-        return metadata
+        return metadataJson
                 .flatMap(service::save)
                 .map(entityId -> new ResponseEntity<>(new IdResponse(entityId), OK));
     }
@@ -43,12 +46,12 @@ public class SongServiceController {
 
     }
 
-    @DeleteMapping(path = "/{id}")
-    Mono<ResponseEntity<IdResponse>> delete(@PathVariable String id) {
+    @DeleteMapping(params = "id")
+    Mono<ResponseEntity<IdsResponse>> delete(@RequestParam("id") String ids) {
         log.info("Received delete mp3 metadata request");
-        return Mono.just(id)
+        return Mono.just(ids)
                 .flatMap(service::delete)
-                .map(entityId -> new ResponseEntity<>(new IdResponse(entityId), OK));
+                .map(idList -> new ResponseEntity<>(new IdsResponse(idList), OK));
     }
 
 }

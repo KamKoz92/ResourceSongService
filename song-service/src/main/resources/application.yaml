@@ -5,3 +5,6 @@ spring:
     url: r2dbc:postgresql://localhost:5432/songs
     username: admin
     password: admin123
+
+server:
+  port: 8081

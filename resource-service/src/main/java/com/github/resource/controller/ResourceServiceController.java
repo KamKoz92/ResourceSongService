@@ -1,7 +1,7 @@
 package com.github.resource.controller;
 
-import com.github.resource.model.IdResponse;
-import com.github.resource.model.IdsResponse;
+import com.github.common.model.IdResponse;
+import com.github.common.model.IdsResponse;
 import com.github.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

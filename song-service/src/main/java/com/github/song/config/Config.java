@@ -1,32 +1,19 @@
-package com.github.resource.config;
+package com.github.song.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.common.util.Validator;
-import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
 import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class Config {
 
     @Bean
-    Tika tika() {
-        return new Tika();
-    }
-
-    @Bean
-    WebClient songWebClient() {
-        return WebClient.create("http://localhost:8081");
-    }
-
-    @Bean
     public JsonMapper.Builder jsonMapperBuilder() {
         return JsonMapper.builder()
                 .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
                 .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL));
-
     }
 
     @Bean

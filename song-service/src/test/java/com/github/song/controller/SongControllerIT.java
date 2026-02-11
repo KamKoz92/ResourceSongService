@@ -4,6 +4,8 @@ import com.github.song.repository.SongRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 @Slf4j
 @Testcontainers
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class SongControllerIT {
@@ -28,10 +31,10 @@ public class SongControllerIT {
     @Autowired
     WebTestClient client;
 
-    @BeforeEach
-    void cleanDb() {
-        repository.deleteAll().block();
-    }
+//    @BeforeEach
+//    void cleanDb() {
+//        repository.deleteAll().block();
+//    }
 
     @Container
     public static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")

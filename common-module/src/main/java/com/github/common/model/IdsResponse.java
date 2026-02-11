@@ -1,4 +1,4 @@
-package com.github.resource.model;
+package com.github.common.model;
 
 import java.util.List;
 
