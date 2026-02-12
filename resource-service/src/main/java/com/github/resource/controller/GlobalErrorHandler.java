@@ -35,8 +35,7 @@ public class GlobalErrorHandler {
         errorResponse.setErrorMessage(e.getMessage());
         return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
-
-    // including errorCode and message in notFound response is redundant
+    
     @ExceptionHandler(MP3FileNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMP3FileNotFoundException(MP3FileNotFoundException e) {
         ErrorResponse errorResponse = new ErrorResponse();
@@ -49,10 +48,6 @@ public class GlobalErrorHandler {
     public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("500");
-        if (e instanceof HttpClientErrorException ex) {
-            errorResponse.setErrorMessage(ex.getMessage());
-            return Mono.just(ResponseEntity.badRequest().body(errorResponse));
-        }
         errorResponse.setErrorMessage(e.getMessage());
         return Mono.just(ResponseEntity.internalServerError().body(errorResponse));
     }

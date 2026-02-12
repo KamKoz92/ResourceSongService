@@ -63,9 +63,7 @@ public class Validator {
         if (song.getId() == null) {
             errors.put("id", "Id is required.");
         }
-//        else if (!songRepository.existsById(song.getId())) {
-//            errors.add("id does not match an existing resource.");
-//        }
+
         if (isNullOrEmpty(song.getName())) {
             errors.put("name", "Song name is required");
         } else if (song.getName().length() > 100) {
@@ -84,9 +82,9 @@ public class Validator {
             errors.put("album", "Album name must be between 1 and 100 characters");
         }
 
-        if (isNullOrEmpty(song.getDuration())) {
+        if (song.getDuration() == null) {
             errors.put("duration", "Duration is required");
-        } else if (!Pattern.matches("^\\d{2}:\\d{2}$", song.getDuration())) {
+        } else if (isNullOrEmpty(song.getDuration()) || !Pattern.matches("^\\d{2}:\\d{2}$", song.getDuration())) {
             errors.put("duration", "Duration must be in mm:ss format with leading zeros");
         } else {
             String[] parts = song.getDuration().split(":");

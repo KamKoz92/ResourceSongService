@@ -6,9 +6,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Table("resources")
-public class ResourceEntity {
+public class Resource {
     @Id
     private Long id;
     private byte[] audio;
-
 }

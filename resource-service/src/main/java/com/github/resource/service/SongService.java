@@ -3,7 +3,7 @@ package com.github.resource.service;
 import com.github.common.model.IdsResponse;
 import com.github.common.model.SongMetadata;
 import com.github.resource.exception.SongServiceException;
-import com.github.resource.model.ResourceEntity;
+import com.github.resource.model.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,15 +28,15 @@ public class SongService {
 
     private final WebClient client;
 
-    public Mono<ResourceEntity> save(ResourceEntity resourceEntity) {
+    public Mono<Resource> save(Resource resource) {
         log.info("Sending request to save mp3 metadata");
-        SongMetadata metadata = extractMetadata(resourceEntity);
+        SongMetadata metadata = extractMetadata(resource);
         return client.post()
                 .uri("/songs")
                 .bodyValue(metadata)
                 .retrieve()
                 .bodyToMono(String.class)
-                .thenReturn(resourceEntity)
+                .thenReturn(resource)
                 .onErrorMap(error -> new SongServiceException("Error while saving mp3 metadata"));
     }
 
@@ -61,12 +61,12 @@ public class SongService {
                 .onErrorMap(error -> new SongServiceException("Error while deleting mp3 metadata"));
     }
 
-    private SongMetadata extractMetadata(ResourceEntity resourceEntity) {
+    private SongMetadata extractMetadata(Resource resource) {
         AutoDetectParser parser = new AutoDetectParser();
         Metadata metadata = new Metadata();
         BodyContentHandler handler = new BodyContentHandler();
         ParseContext context = new ParseContext();
-        try (ByteArrayInputStream input = new ByteArrayInputStream(resourceEntity.getAudio())) {
+        try (ByteArrayInputStream input = new ByteArrayInputStream(resource.getAudio())) {
             parser.parse(input, handler, metadata, context);
         } catch (IOException | TikaException | SAXException e) {
             throw new RuntimeException(e);
@@ -79,7 +79,7 @@ public class SongService {
         songMetadata.setYear(metadata.get("xmpDM:releaseDate"));
         songMetadata.setArtist(metadata.get("xmpDM:artist"));
         songMetadata.setDuration(duration);
-        songMetadata.setId(resourceEntity.getId());
+        songMetadata.setId(resource.getId());
         return songMetadata;
     }
 
@@ -93,6 +93,4 @@ public class SongService {
         String ss = String.valueOf(second);
         return String.format("%s:%s", StringUtils.leftPad(s, 2, "0"), StringUtils.leftPad(ss, 2, "0"));
     }
-
-
 }

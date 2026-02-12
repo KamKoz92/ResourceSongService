@@ -1,8 +1,17 @@
 spring:
   application:
     name: SongService
+
+  datasource:
+    url: jdbc:postgresql://localhost:55432/songs
+    username: admin
+    password: admin123
+  jpa:
+    hibernate:
+      ddl-auto: update
+
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/songs
+    url: r2dbc:postgresql://localhost:55432/songs
     username: admin
     password: admin123
 

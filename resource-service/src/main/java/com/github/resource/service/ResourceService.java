@@ -3,7 +3,7 @@ package com.github.resource.service;
 import com.github.common.util.Validator;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
-import com.github.resource.model.ResourceEntity;
+import com.github.resource.model.Resource;
 import com.github.resource.repository.ResourceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +31,13 @@ public class ResourceService {
                 .map(this::getResourceEntity)
                 .flatMap(repository::save)
                 .flatMap(songService::save)
-                .map(ResourceEntity::getId);
+                .map(Resource::getId);
     }
 
     public Mono<byte[]> get(String id) {
         log.info("Getting mp3 file with id {}", id);
         return repository.findById(validator.mapIdToNumber(id))
-                .map(ResourceEntity::getAudio)
+                .map(Resource::getAudio)
                 .switchIfEmpty(Mono.error(new MP3FileNotFoundException(String.format("Resource with ID=%s not found", id))));
     }
 
@@ -55,10 +55,10 @@ public class ResourceService {
                         .thenReturn(id));
     }
 
-    private ResourceEntity getResourceEntity(byte[] audioData) {
-        ResourceEntity resourceEntity = new ResourceEntity();
-        resourceEntity.setAudio(audioData);
-        return resourceEntity;
+    private Resource getResourceEntity(byte[] audioData) {
+        Resource resource = new Resource();
+        resource.setAudio(audioData);
+        return resource;
     }
 
     private Mono<byte[]> validateMP3Format(byte[] bytes) {

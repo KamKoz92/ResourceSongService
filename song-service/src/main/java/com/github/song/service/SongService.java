@@ -4,6 +4,7 @@ import com.github.common.model.SongMetadata;
 import com.github.common.util.Validator;
 import com.github.song.exception.MetadataAlreadyPresentException;
 import com.github.song.exception.MetadataNotFoundException;
+import com.github.song.jpa.SongJPARepository;
 import com.github.song.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SongService {
 
+    private final SongJPARepository jpaRepository;
     private final SongRepository repository;
     private final Validator validator;
 

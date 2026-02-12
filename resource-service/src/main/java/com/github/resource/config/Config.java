@@ -17,6 +17,7 @@ public class Config {
     }
 
     @Bean
+    // TODO externalize it
     WebClient songWebClient() {
         return WebClient.create("http://localhost:8081");
     }
