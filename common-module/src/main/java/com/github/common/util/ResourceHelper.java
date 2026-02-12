@@ -64,21 +64,21 @@ public class ResourceHelper {
             errors.put("id", "Id is required.");
         }
 
-        if (isNullOrEmpty(metadata.getName())) {
+        if (metadata.getName() == null) {
             errors.put("name", "Song name is required");
-        } else if (metadata.getName().length() > 100) {
+        } else if (isNullOrEmpty(metadata.getName()) || metadata.getName().length() > 100) {
             errors.put("name", "Song name must be between 1 and 100 characters");
         }
 
-        if (isNullOrEmpty(metadata.getArtist())) {
+        if (metadata.getArtist() == null) {
             errors.put("artist", "Artist name is required");
-        } else if (metadata.getArtist().length() > 100) {
+        } else if (isNullOrEmpty(metadata.getArtist()) || metadata.getArtist().length() > 100) {
             errors.put("artist", "Artist name must be between 1 and 100 characters");
         }
 
-        if (isNullOrEmpty(metadata.getAlbum())) {
+        if (metadata.getAlbum() == null) {
             errors.put("album", "Album name is required");
-        } else if (metadata.getAlbum().length() > 100) {
+        } else if (isNullOrEmpty(metadata.getAlbum()) || metadata.getAlbum().length() > 100) {
             errors.put("album", "Album name must be between 1 and 100 characters");
         }
 
@@ -95,9 +95,9 @@ public class ResourceHelper {
             }
         }
 
-        if (isNullOrEmpty(metadata.getYear())) {
+        if (metadata.getYear() == null) {
             errors.put("year", "Year is required");
-        } else if (!Pattern.matches("^(19|20)\\d{2}$", metadata.getYear())) {
+        } else if (isNullOrEmpty(metadata.getYear()) || !Pattern.matches("^(19|20)\\d{2}$", metadata.getYear())) {
             errors.put("year", "Year must be between 1900 and 2099");
         }
         if (!errors.isEmpty()) {
