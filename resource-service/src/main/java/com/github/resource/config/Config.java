@@ -1,7 +1,7 @@
 package com.github.resource.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.common.util.ResourceHelper;
+import com.github.resource.util.ResourceHelper;
 import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

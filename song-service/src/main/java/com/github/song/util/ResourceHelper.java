@@ -1,9 +1,10 @@
-package com.github.common.util;
+package com.github.song.util;
 
-import com.github.common.exception.InvalidCSVException;
-import com.github.common.exception.InvalidIdException;
-import com.github.common.exception.MetadataValidationException;
-import com.github.common.model.SongMetadata;
+
+import com.github.song.exception.InvalidCSVException;
+import com.github.song.exception.InvalidIdException;
+import com.github.song.exception.MetadataValidationException;
+import com.github.song.model.SongMetadata;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 

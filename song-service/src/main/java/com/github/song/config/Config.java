@@ -1,7 +1,7 @@
 package com.github.song.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.common.util.ResourceHelper;
+import com.github.song.util.ResourceHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tools.jackson.databind.json.JsonMapper;

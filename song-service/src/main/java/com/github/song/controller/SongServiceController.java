@@ -1,9 +1,9 @@
 package com.github.song.controller;
 
 
-import com.github.common.model.IdResponse;
-import com.github.common.model.IdsResponse;
-import com.github.common.model.SongMetadata;
+import com.github.song.model.IdResponse;
+import com.github.song.model.IdsResponse;
+import com.github.song.model.SongMetadata;
 import com.github.song.service.SongService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

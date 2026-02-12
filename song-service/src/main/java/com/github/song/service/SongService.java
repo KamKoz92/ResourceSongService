@@ -1,10 +1,10 @@
 package com.github.song.service;
 
-import com.github.common.model.SongMetadata;
-import com.github.common.util.ResourceHelper;
 import com.github.song.exception.MetadataAlreadyPresentException;
 import com.github.song.exception.MetadataNotFoundException;
+import com.github.song.model.SongMetadata;
 import com.github.song.repository.SongRepository;
+import com.github.song.util.ResourceHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

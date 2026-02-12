@@ -1,4 +1,4 @@
-package com.github.common.exception;
+package com.github.resource.exception;
 
 public class InvalidIdException extends RuntimeException {
     public InvalidIdException(String message) {

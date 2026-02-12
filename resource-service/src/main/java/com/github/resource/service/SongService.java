@@ -1,9 +1,9 @@
 package com.github.resource.service;
 
-import com.github.common.model.IdsResponse;
-import com.github.common.model.SongMetadata;
 import com.github.resource.exception.SongServiceException;
+import com.github.resource.model.IdsResponse;
 import com.github.resource.model.Resource;
+import com.github.resource.model.SongMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

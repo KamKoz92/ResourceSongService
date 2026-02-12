@@ -1,4 +1,4 @@
-package com.github.common.exception;
+package com.github.song.exception;
 
 import lombok.Getter;
 

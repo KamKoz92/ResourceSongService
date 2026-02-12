@@ -1,10 +1,10 @@
 package com.github.resource.service;
 
-import com.github.common.util.ResourceHelper;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
 import com.github.resource.model.Resource;
 import com.github.resource.repository.ResourceRepository;
+import com.github.resource.util.ResourceHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Strings;

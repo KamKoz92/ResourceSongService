@@ -1,10 +1,10 @@
 package com.github.resource.controller;
 
-import com.github.common.exception.InvalidCSVException;
-import com.github.common.exception.InvalidIdException;
+import com.github.resource.exception.InvalidCSVException;
+import com.github.resource.exception.InvalidIdException;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
-import com.github.common.model.ErrorResponse;
+import com.github.resource.model.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

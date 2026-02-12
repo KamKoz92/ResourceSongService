@@ -1,4 +1,4 @@
-package com.github.common.model;
+package com.github.resource.model;
 
 
 import lombok.Data;

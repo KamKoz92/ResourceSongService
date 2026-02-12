@@ -1,6 +1,6 @@
 package com.github.song.repository;
 
-import com.github.common.model.SongMetadata;
+import com.github.song.model.SongMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
