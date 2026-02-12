@@ -7,13 +7,13 @@ spring:
       max-in-memory-size: 10MB
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/resources
-    username: admin
-    password: admin123
+    url: jdbc:postgresql://localhost:55432/resource-db
+    username: postgres
+    password: postgres
   jpa:
     hibernate:
       ddl-auto: update
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/resources
-    username: admin
-    password: admin123
+    url: r2dbc:postgresql://localhost:55432/resource-db
+    username: postgres
+    password: postgres

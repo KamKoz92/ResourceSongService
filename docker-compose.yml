@@ -1,21 +1,6 @@
 version: '3.3'
 
 services:
-  resource-service:
-    container_name: resource
-    image: resource-service:latest
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://resource-db:5432/resource-db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_R2DBC_URL: r2dbc:postgresql://resource-db:5432/resource-db
-      SPRING_R2DBC_USERNAME: postgres
-      SPRING_R2DBC_PASSWORD: postgres
-    depends_on:
-      - resource-db
-
   resource-db:
     image: postgres:17-alpine
     container_name: resource-db
@@ -25,22 +10,6 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "55432:5432"
-
-  song-service:
-    image: song-service:latest
-    container_name: song
-    ports:
-      - "8081:8081"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://song-db:5432/song-db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_R2DBC_URL: r2dbc:postgresql://song-db:5432/song-db
-      SPRING_R2DBC_USERNAME: postgres
-      SPRING_R2DBC_PASSWORD: postgres
-    depends_on:
-      - song-db
-
   song-db:
     image: postgres:17-alpine
     container_name: song-db
