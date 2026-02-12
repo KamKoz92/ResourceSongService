@@ -1,6 +1,6 @@
 package com.github.resource.service;
 
-import com.github.common.util.Validator;
+import com.github.common.util.ResourceHelper;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
 import com.github.resource.model.Resource;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ResourceService {
 
     private final ResourceRepository repository;
-    private final Validator validator;
+    private final ResourceHelper resourceHelper;
     private final SongService songService;
     private final Tika tika;
 
@@ -36,13 +36,13 @@ public class ResourceService {
 
     public Mono<byte[]> get(String id) {
         log.info("Getting mp3 file with id {}", id);
-        return repository.findById(validator.mapIdToNumber(id))
+        return repository.findById(resourceHelper.mapIdToNumber(id))
                 .map(Resource::getAudio)
                 .switchIfEmpty(Mono.error(new MP3FileNotFoundException(String.format("Resource with ID=%s not found", id))));
     }
 
     public Mono<List<Long>> delete(String ids) {
-        return Flux.fromIterable(validator.flatMapCsv(ids))
+        return Flux.fromIterable(resourceHelper.flatMapCsv(ids))
                 .flatMap(this::delete)
                 .collectList()
                 .flatMap(songService::delete);

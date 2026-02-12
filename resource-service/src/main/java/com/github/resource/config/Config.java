@@ -1,7 +1,7 @@
 package com.github.resource.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.common.util.Validator;
+import com.github.common.util.ResourceHelper;
 import org.apache.tika.Tika;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class Config {
     }
 
     @Bean
-    public Validator validator() {
-        return new Validator();
+    public ResourceHelper resourceHelper() {
+        return new ResourceHelper();
     }
 }

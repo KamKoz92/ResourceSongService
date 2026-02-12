@@ -2,17 +2,15 @@ package com.github.song.controller;
 
 import com.github.common.exception.InvalidCSVException;
 import com.github.common.exception.InvalidIdException;
+import com.github.common.exception.MetadataValidationException;
 import com.github.common.model.ErrorResponse;
 import com.github.song.exception.MetadataAlreadyPresentException;
 import com.github.song.exception.MetadataNotFoundException;
-import com.github.common.exception.MetadataValidationException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
 
-@Slf4j
 @RestControllerAdvice
 public class GlobalErrorHandler {
 
@@ -48,7 +46,6 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
-        log.error("Unknown", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("500");
         errorResponse.setErrorMessage(e.getMessage());

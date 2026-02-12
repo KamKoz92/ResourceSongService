@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 
 @RequiredArgsConstructor
-public class Validator {
+public class ResourceHelper {
 
     public Long mapIdToNumber(String id) {
         if (StringUtils.isNumeric(id)) {
@@ -38,11 +38,11 @@ public class Validator {
             throw new InvalidCSVException(String.format("CSV string is too long: received %s characters, maximum allowed is 200", length));
         }
         return Stream.of(ids.split(","))
-                .map(this::mapIdToNumber2)
+                .map(this::mapCvsIdToNumber)
                 .toList();
     }
 
-    private Long mapIdToNumber2(String id) {
+    private Long mapCvsIdToNumber(String id) {
         if (StringUtils.isNumeric(id)) {
             try {
                 long l = Long.parseLong(id);
@@ -57,37 +57,37 @@ public class Validator {
         throw new InvalidIdException(String.format("Invalid ID format: '%s'. Only positive integers are allowed", id));
     }
 
-    public void validate(SongMetadata song) {
+    public void validateSongMetadata(SongMetadata metadata) {
         Map<String, String> errors = new HashMap<>();
 
-        if (song.getId() == null) {
+        if (metadata.getId() == null) {
             errors.put("id", "Id is required.");
         }
 
-        if (isNullOrEmpty(song.getName())) {
+        if (isNullOrEmpty(metadata.getName())) {
             errors.put("name", "Song name is required");
-        } else if (song.getName().length() > 100) {
+        } else if (metadata.getName().length() > 100) {
             errors.put("name", "Song name must be between 1 and 100 characters");
         }
 
-        if (isNullOrEmpty(song.getArtist())) {
+        if (isNullOrEmpty(metadata.getArtist())) {
             errors.put("artist", "Artist name is required");
-        } else if (song.getArtist().length() > 100) {
+        } else if (metadata.getArtist().length() > 100) {
             errors.put("artist", "Artist name must be between 1 and 100 characters");
         }
 
-        if (isNullOrEmpty(song.getAlbum())) {
+        if (isNullOrEmpty(metadata.getAlbum())) {
             errors.put("album", "Album name is required");
-        } else if (song.getAlbum().length() > 100) {
+        } else if (metadata.getAlbum().length() > 100) {
             errors.put("album", "Album name must be between 1 and 100 characters");
         }
 
-        if (song.getDuration() == null) {
+        if (metadata.getDuration() == null) {
             errors.put("duration", "Duration is required");
-        } else if (isNullOrEmpty(song.getDuration()) || !Pattern.matches("^\\d{2}:\\d{2}$", song.getDuration())) {
+        } else if (isNullOrEmpty(metadata.getDuration()) || !Pattern.matches("^\\d{2}:\\d{2}$", metadata.getDuration())) {
             errors.put("duration", "Duration must be in mm:ss format with leading zeros");
         } else {
-            String[] parts = song.getDuration().split(":");
+            String[] parts = metadata.getDuration().split(":");
             int minutes = Integer.parseInt(parts[0]);
             int seconds = Integer.parseInt(parts[1]);
             if (minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
@@ -95,9 +95,9 @@ public class Validator {
             }
         }
 
-        if (isNullOrEmpty(song.getYear())) {
+        if (isNullOrEmpty(metadata.getYear())) {
             errors.put("year", "Year is required");
-        } else if (!Pattern.matches("^(19|20)\\d{2}$", song.getYear())) {
+        } else if (!Pattern.matches("^(19|20)\\d{2}$", metadata.getYear())) {
             errors.put("year", "Year must be between 1900 and 2099");
         }
         if (!errors.isEmpty()) {

@@ -1,7 +1,7 @@
 package com.github.song.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.common.util.Validator;
+import com.github.common.util.ResourceHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tools.jackson.databind.json.JsonMapper;
@@ -17,7 +17,7 @@ public class Config {
     }
 
     @Bean
-    public Validator validator() {
-        return new Validator();
+    public ResourceHelper resourceHelper() {
+        return new ResourceHelper();
     }
 }
