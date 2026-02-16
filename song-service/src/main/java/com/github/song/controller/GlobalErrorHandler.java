@@ -6,11 +6,13 @@ import com.github.song.exception.MetadataAlreadyPresentException;
 import com.github.song.exception.MetadataNotFoundException;
 import com.github.song.exception.MetadataValidationException;
 import com.github.song.model.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalErrorHandler {
 
@@ -19,6 +21,7 @@ public class GlobalErrorHandler {
             InvalidCSVException.class,
             MetadataValidationException.class})
     public Mono<ResponseEntity<ErrorResponse>> handleInvalidIdException(RuntimeException e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("400");
         errorResponse.setErrorMessage(e.getMessage());
@@ -30,6 +33,7 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(MetadataNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMetadataNotFoundException(MetadataNotFoundException e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorMessage(e.getMessage());
         errorResponse.setErrorCode("404");
@@ -38,6 +42,7 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(MetadataAlreadyPresentException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMetadataAlreadyPresentException(MetadataAlreadyPresentException e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorMessage(e.getMessage());
         errorResponse.setErrorCode("409");
@@ -46,6 +51,7 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("500");
         errorResponse.setErrorMessage(e.getMessage());

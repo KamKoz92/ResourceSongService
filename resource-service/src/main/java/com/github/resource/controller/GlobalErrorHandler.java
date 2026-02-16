@@ -5,6 +5,7 @@ import com.github.resource.exception.InvalidIdException;
 import com.github.resource.exception.InvalidMP3FormatException;
 import com.github.resource.exception.MP3FileNotFoundException;
 import com.github.resource.model.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalErrorHandler {
 
@@ -21,6 +23,7 @@ public class GlobalErrorHandler {
             InvalidMP3FormatException.class,
             ResponseStatusException.class})
     public Mono<ResponseEntity<ErrorResponse>> handleInvalidIdException(RuntimeException e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("400");
         if (e instanceof UnsupportedMediaTypeStatusException ex) {
@@ -37,6 +40,7 @@ public class GlobalErrorHandler {
     
     @ExceptionHandler(MP3FileNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleMP3FileNotFoundException(MP3FileNotFoundException e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("404");
         errorResponse.setErrorMessage(e.getMessage());
@@ -45,6 +49,7 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(exception = Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGenericException(Exception e) {
+        log.error("", e);
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setErrorCode("500");
         errorResponse.setErrorMessage(e.getMessage());
