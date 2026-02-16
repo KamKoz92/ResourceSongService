@@ -2,9 +2,9 @@ spring:
   application:
     name: SongService
   r2dbc:
-    url: r2dbc:postgresql://localhost:55433/song-db
-    username: postgres
-    password: postgres
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:55433/song-db}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:postgres}
 
 server:
   port: 8081

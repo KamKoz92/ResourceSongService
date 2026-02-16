@@ -5,10 +5,10 @@ spring:
     codecs:
       max-in-memory-size: 10MB
   r2dbc:
-    url: r2dbc:postgresql://localhost:55432/resource-db
-    username: postgres
-    password: postgres
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:55432/resource-db}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:postgres}
 service:
   song:
-    url: http://localhost:8081
+    url: ${SERVICE_SONG_URL:http://localhost:8081}
 
