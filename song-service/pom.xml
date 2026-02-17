@@ -22,6 +22,7 @@
         <r2dbc-postgresql.version>1.1.1.RELEASE</r2dbc-postgresql.version>
         <junit-jupiter.version>1.19.7</junit-jupiter.version>
         <postgresql.test.version>1.19.7</postgresql.test.version>
+        <spring-cloud-starter-netflix-eureka-client.version>5.0.1</spring-cloud-starter-netflix-eureka-client.version>
     </properties>
 
     <dependencyManagement>
@@ -59,6 +60,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>${spring-cloud-starter-netflix-eureka-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

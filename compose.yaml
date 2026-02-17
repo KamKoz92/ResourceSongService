@@ -1,7 +1,26 @@
 
 services:
+  eureka-server:
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8088:8088"
+    depends_on:
+      - eureka-server
+    environment:
+      SERVICE_SONG_LB: ${SERVICE_SONG_LB}
+      SERVICE_RESOURCE_LB: ${SERVICE_RESOURCE_LB}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+
   resource-service:
-    container_name: resource
     build:
       context: ./resource-service
     ports:
@@ -10,13 +29,14 @@ services:
       SPRING_R2DBC_URL: ${RESOURCE_DB_URL}
       SPRING_R2DBC_USERNAME: ${RESOURCE_DB_USERNAME}
       SPRING_R2DBC_PASSWORD: ${RESOURCE_DB_PASSWORD}
-      SERVICE_SONG_URL: ${SERVICE_SONG_URL}
+      SERVICE_GATEWAY_URL: ${SERVICE_GATEWAY_URL}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
     depends_on:
       - resource-db
+      - eureka-server
 
   resource-db:
     image: postgres:17-alpine
-    container_name: resource-db
     environment:
       POSTGRES_DB: ${RESOURCE_POSTGRES_DB}
       POSTGRES_USER: ${RESOURCE_POSTGRES_USER}
@@ -27,21 +47,23 @@ services:
       - ./init-scripts/resource-db:/docker-entrypoint-initdb.d:ro
 
   song-service:
-    container_name: song
     build:
       context: ./song-service
+    deploy:
+      replicas: 2
     ports:
-      - "8081:8081"
+      - "8081-8082:8081"
     environment:
       SPRING_R2DBC_URL: ${SONG_DB_URL}
       SPRING_R2DBC_USERNAME: ${SONG_DB_USERNAME}
       SPRING_R2DBC_PASSWORD: ${SONG_DB_PASSWORD}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
     depends_on:
       - song-db
+      - eureka-server
 
   song-db:
     image: postgres:17-alpine
-    container_name: song-db
     environment:
       POSTGRES_DB: ${SONG_POSTGRES_DB}
       POSTGRES_USER: ${SONG_POSTGRES_USER}
